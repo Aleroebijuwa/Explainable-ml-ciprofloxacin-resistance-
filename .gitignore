@@ -27,3 +27,6 @@ desktop.ini
 
 # AWS / SSH keys - never commit
 *.pem
+
+# Personal notes (not part of the repository)
+notes/
