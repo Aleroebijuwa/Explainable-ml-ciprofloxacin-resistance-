@@ -1,0 +1,11 @@
+,,AUROC,balanced_accuracy,MCC,sensitivity,specificity
+Random CV,Majority class,0.500 ± 0.000,0.500 ± 0.000,0.000 ± 0.000,0.000 ± 0.000,1.000 ± 0.000
+Random CV,Known-mechanism rule,0.984 ± 0.018,0.948 ± 0.042,0.910 ± 0.063,0.908 ± 0.084,0.989 ± 0.015
+Random CV,Logistic Regression,0.989 ± 0.015,0.938 ± 0.039,0.879 ± 0.059,0.895 ± 0.086,0.981 ± 0.021
+Random CV,Random Forest,0.985 ± 0.020,0.930 ± 0.035,0.870 ± 0.030,0.879 ± 0.087,0.981 ± 0.021
+Random CV,XGBoost,0.988 ± 0.020,0.938 ± 0.034,0.918 ± 0.040,0.878 ± 0.070,0.997 ± 0.006
+Clade-aware CV,Majority class,0.500 ± 0.000,0.500 ± 0.000,0.000 ± 0.000,0.000 ± 0.000,1.000 ± 0.000
+Clade-aware CV,Known-mechanism rule,0.981 ± 0.027,0.935 ± 0.047,0.886 ± 0.085,0.881 ± 0.092,0.989 ± 0.011
+Clade-aware CV,Logistic Regression,0.984 ± 0.027,0.917 ± 0.047,0.848 ± 0.048,0.856 ± 0.116,0.978 ± 0.026
+Clade-aware CV,Random Forest,0.983 ± 0.028,0.911 ± 0.075,0.861 ± 0.126,0.827 ± 0.142,0.994 ± 0.009
+Clade-aware CV,XGBoost,0.984 ± 0.029,0.942 ± 0.058,0.912 ± 0.062,0.887 ± 0.119,0.997 ± 0.006

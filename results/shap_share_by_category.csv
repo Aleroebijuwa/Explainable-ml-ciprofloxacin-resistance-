@@ -1,0 +1,5 @@
+category,Logistic Regression,Random Forest,XGBoost
+Target-site QRDR mutation,0.6681537372507358,0.8586320040300138,0.7516527
+Acquired resistance gene,0.02962019935017768,0.049418044032561136,0.102830775
+Efflux regulator truncation,0.0,0.0,0.0
+Other substitution (possible lineage marker),0.30222606339908653,0.09194995193742504,0.14551654

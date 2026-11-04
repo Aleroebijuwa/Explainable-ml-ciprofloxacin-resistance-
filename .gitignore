@@ -24,3 +24,6 @@ work/
 Thumbs.db
 desktop.ini
 .vscode/
+
+# AWS / SSH keys - never commit
+*.pem
