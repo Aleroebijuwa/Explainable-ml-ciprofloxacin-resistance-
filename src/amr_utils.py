@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 from scipy.cluster.hierarchy import fcluster, linkage
 from scipy.spatial.distance import squareform
+from scipy.stats import binomtest, norm, rankdata
 from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
 from sklearn.metrics import (balanced_accuracy_score, matthews_corrcoef,
                              recall_score, roc_auc_score)
@@ -178,3 +179,59 @@ def bootstrap_ci(y_true, prob, n_boot=1000, seed=42, alpha=0.05):
         "ci_low": samples.quantile(alpha / 2),
         "ci_high": samples.quantile(1 - alpha / 2),
     }).loc[METRICS]
+
+
+# ---------------------------------------------------------------------------
+# Statistical comparison of models on the same test set
+# ---------------------------------------------------------------------------
+
+def delong_test(y_true, prob_a, prob_b):
+    """DeLong test for the difference between two correlated AUROCs.
+
+    Both models are scored on the same isolates, so their AUROCs are correlated;
+    DeLong et al. (1988) estimate the covariance from the structural components
+    (fast midrank algorithm of Sun & Xu, 2014). Returns (auc_a, auc_b, z, p).
+    """
+    y_true = np.asarray(y_true)
+    pos, neg = y_true == 1, y_true == 0
+    m, n = pos.sum(), neg.sum()
+    aucs, v10, v01 = [], [], []
+    for prob in (np.asarray(prob_a), np.asarray(prob_b)):
+        x, y = prob[pos], prob[neg]
+        tz = rankdata(np.concatenate([x, y]))
+        tx, ty = rankdata(x), rankdata(y)
+        aucs.append((tz[:m].sum() - m * (m + 1) / 2) / (m * n))
+        v10.append((tz[:m] - tx) / n)
+        v01.append(1 - (tz[m:] - ty) / m)
+    s10, s01 = np.cov(np.vstack(v10)), np.cov(np.vstack(v01))
+    var = (s10[0, 0] + s10[1, 1] - 2 * s10[0, 1]) / m + (s01[0, 0] + s01[1, 1] - 2 * s01[0, 1]) / n
+    diff = aucs[0] - aucs[1]
+    if var <= 0:
+        return aucs[0], aucs[1], 0.0, 1.0
+    z = diff / np.sqrt(var)
+    return aucs[0], aucs[1], z, 2 * norm.sf(abs(z))
+
+
+def mcnemar_test(y_true, pred_a, pred_b):
+    """Exact McNemar test: do two classifiers make different numbers of errors?
+
+    Only the discordant isolates (one model right, the other wrong) are informative.
+    Returns (a_right_b_wrong, a_wrong_b_right, p).
+    """
+    y_true = np.asarray(y_true)
+    right_a, right_b = np.asarray(pred_a) == y_true, np.asarray(pred_b) == y_true
+    b, c = int((right_a & ~right_b).sum()), int((~right_a & right_b).sum())
+    p = 1.0 if b + c == 0 else binomtest(b, b + c, 0.5).pvalue
+    return b, c, p
+
+
+def holm_adjust(p_values):
+    """Holm-Bonferroni adjusted p-values (controls the family-wise error rate)."""
+    p = np.asarray(p_values, dtype=float)
+    order = np.argsort(p)
+    adjusted = np.empty_like(p)
+    running = 0.0
+    for rank, i in enumerate(order):
+        running = max(running, (len(p) - rank) * p[i])
+        adjusted[i] = min(running, 1.0)
+    return adjusted

@@ -1,5 +1,5 @@
 scheme,model,features,AUROC,balanced_accuracy,MCC
-Clade-aware CV,Logistic Regression,All features,0.984 ± 0.027,0.917 ± 0.047,0.848 ± 0.048
+Clade-aware CV,Logistic Regression,All features,0.983 ± 0.028,0.917 ± 0.047,0.848 ± 0.048
 Clade-aware CV,Logistic Regression,Known mechanisms only,0.985 ± 0.027,0.960 ± 0.038,0.880 ± 0.047
 Clade-aware CV,Random Forest,All features,0.983 ± 0.028,0.911 ± 0.075,0.861 ± 0.126
 Clade-aware CV,Random Forest,Known mechanisms only,0.977 ± 0.043,0.920 ± 0.049,0.887 ± 0.060

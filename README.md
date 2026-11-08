@@ -32,7 +32,8 @@ Features were extracted for 703 of 704 isolates (one isolate's reads could not b
   and a rule that counts known resistance mechanisms.
 - **Validation:** nested cross-validation (hyperparameters tuned in the inner loop), with **random**
   and **clade-aware** (lineage-grouped) outer folds, plus the dataset's original held-out test set
-  with bootstrap 95% confidence intervals.
+  with bootstrap 95% confidence intervals and pairwise significance tests (DeLong for AUROC,
+  exact McNemar for errors, Holm-Bonferroni correction).
 - **Further analyses:** ablation (known mechanisms only), sensitivity to the lineage threshold,
   and performance on test isolates from seen vs unseen lineages.
 - **Explainability:** SHAP values for every model; feature attribution grouped into known
@@ -46,12 +47,15 @@ Clade-aware 5-fold cross-validation (mean ± SD):
 |---|---|---|---|
 | Majority class | 0.500 ± 0.000 | 0.500 ± 0.000 | 0.000 ± 0.000 |
 | Known-mechanism rule | 0.981 ± 0.027 | 0.935 ± 0.047 | 0.886 ± 0.085 |
-| Logistic Regression | 0.984 ± 0.027 | 0.917 ± 0.047 | 0.848 ± 0.048 |
+| Logistic Regression | 0.983 ± 0.028 | 0.917 ± 0.047 | 0.848 ± 0.048 |
 | Random Forest | 0.983 ± 0.028 | 0.911 ± 0.075 | 0.861 ± 0.126 |
 | XGBoost | 0.984 ± 0.029 | 0.942 ± 0.058 | 0.912 ± 0.062 |
 
 - All models predict resistance very accurately (held-out AUROC ≈ 0.99, MCC 0.96–0.97), but they
-  do not clearly outperform the simple known-mechanism rule.
+  do not outperform the simple known-mechanism rule.
+- XGBoost scored highest in clade-aware CV, but no pair of models (including the rule) differs
+  significantly on the held-out test set (DeLong and exact McNemar tests, Holm-adjusted
+  p = 1.0 for all six pairs; 4–5 misclassified isolates out of 260 for every model).
 - Performance drops very little on unseen lineages (random minus clade-aware CV: AUROC ≤ 0.005).
 - SHAP ranks **parC S80I, gyrA D87N and gyrA S83L** as the three most important features in every
   model, followed by the acquired gene *qnrS*.
