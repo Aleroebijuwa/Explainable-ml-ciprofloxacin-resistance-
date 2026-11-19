@@ -56,7 +56,7 @@ Clade-aware 5-fold cross-validation (mean ± SD):
 - XGBoost scored highest in clade-aware CV, but no pair of models (including the rule) differs
   significantly on the held-out test set (DeLong and exact McNemar tests, Holm-adjusted
   p = 1.0 for all six pairs; 4–5 misclassified isolates out of 260 for every model).
-- Performance drops very little on unseen lineages (random minus clade-aware CV: AUROC ≤ 0.005).
+- Performance drops very little on unseen lineages (random minus clade-aware CV: AUROC ≤ 0.006).
 - SHAP ranks **parC S80I, gyrA D87N and gyrA S83L** as the three most important features in every
   model, followed by the acquired gene *qnrS*.
 - Logistic Regression attributes about 30% of its importance to non-mechanism substitutions
